@@ -29,8 +29,7 @@
     <header id="home" class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1 class="fade-in">SMASH YOUR LIMITS          
-            </h1>
+            <h1 class="fade-in">SMASH YOUR LIMITS</h1>
             <p>Premium Glassmorphism Paddle Court Booking Hub. Experience Ultra-Modern Sports Infrastructure.</p>
             <div class="live-status">
                 <span class="pulse-dot"></span> Live Courts Available Right Now
@@ -167,7 +166,8 @@
         </div>
     </section>
 
-    <section id="dashboards" class="dashboards-section">
+    <!-- BUG 3 FIXED: added 'hidden' class so dashboard only shows after login -->
+    <section id="dashboards" class="dashboards-section hidden">
         <div class="container">
             <div class="dashboard-toggle-tabs">
                 <button class="tab-btn active" onclick="switchDashboard('userDash')">User Space</button>
@@ -176,8 +176,8 @@
 
             <div id="userDash" class="dashboard-view glass">
                 <div class="dash-header">
-                    <h2>Welcome back, Player</h2>
-                    <span class="user-email-display">client@paddlepro.com</span>
+                    <h2>Welcome back, <span id="dashUserName">Player</span></h2>
+                    <span class="user-email-display" id="dashUserEmail">client@paddlepro.com</span>
                 </div>
                 <div class="dashboard-grid">
                     <div class="dash-card">
@@ -188,17 +188,7 @@
                                    <tr><th>ID</th><th>Court</th><th>Schedule Timeline</th><th>Aggregate Total</th><th>Status</th><th>Actions</th></tr>
                                </thead>
                                <tbody id="userBookingsTable">
-                                   <tr>
-                                       <td>#1024</td>
-                                       <td>Neon Center Court</td>
-                                       <td>2026-05-24 @ 08:00 PM</td>
-                                       <td>PKR 2,500</td>
-                                       <td><span class="badge badge-success">Confirmed</span></td>
-                                       <td>
-                                           <button class="btn-action cancel" onclick="cancelBookingAction(1024)">Cancel</button>
-                                           <button class="btn-action download" onclick="triggerReceiptDownload(1024)"><i class="fas fa-download"></i></button>
-                                       </td>
-                                   </tr>
+                                   <tr><td colspan="6" style="text-align:center;color:var(--text-muted)">Login to see your bookings.</td></tr>
                                </tbody>
                             </table>
                         </div>
@@ -211,11 +201,12 @@
                 <div class="admin-grid">
                     <div class="dash-card counter-card">
                         <h4>Total Reservations</h4>
-                        <p class="counter-num" id="adminTotalBookings">154</p>
+                        <!-- BUG 2 FIXED: IDs match script.js -->
+                        <p class="counter-num" id="adminTotalBookings">0</p>
                     </div>
                     <div class="dash-card counter-card">
                         <h4>Processed Yield</h4>
-                        <p class="counter-num" id="adminTotalRevenue">PKR 385,000</p>
+                        <p class="counter-num" id="adminTotalRevenue">PKR 0</p>
                     </div>
                 </div>
                 <div class="dash-card">
@@ -226,7 +217,7 @@
                                <tr><th>ID</th><th>User</th><th>Target Arena</th><th>Date Slot</th><th>Total Price</th><th>Status</th></tr>
                            </thead>
                            <tbody id="adminBookingsTable">
-                               <tr><td>#1024</td><td>Salman</td><td>Neon Center Court</td><td>2026-05-24</td><td>PKR 2,500</td><td>Confirmed</td></tr>
+                               <tr><td colspan="6" style="text-align:center;color:var(--text-muted)">No bookings found.</td></tr>
                            </tbody>
                         </table>
                     </div>
@@ -280,7 +271,7 @@
     <div id="authModal" class="modal-overlay hidden">
         <div class="modal-box glass">
             <div class="modal-close" onclick="closeAuthModal()">×</div>
-            
+
             <div id="loginFormBlock">
                 <h3>System Authorization</h3>
                 <form id="loginForm">
@@ -303,8 +294,8 @@
             </div>
         </div>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>const supabase_global = window.supabase;</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
 </html>
