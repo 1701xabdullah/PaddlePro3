@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaddlePro Booking System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo"><i class="fas fa-table-tennis-paddle-ball"></i> PADDLE<span>PRO</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" onclick="toggleMenu()">Home</a></li>
+                <li><a href="#about" onclick="toggleMenu()">About</a></li>
+                <li><a href="#courts" onclick="toggleMenu()">Courts</a></li>
+                <li><a href="#booking" onclick="toggleMenu()">Booking</a></li>
+                <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+                <li class="auth-btn"><a href="#auth" onclick="showAuthModal('login')">Login</a></li>
+            </ul>
+            <div class="hamburger" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <header id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="fade-in">SMASH YOUR LIMITS          
+            </h1>
+            <p>Premium Glassmorphism Paddle Court Booking Hub. Experience Ultra-Modern Sports Infrastructure.</p>
+            <div class="live-status">
+                <span class="pulse-dot"></span> Live Courts Available Right Now
+            </div>
+            <a href="#booking" class="btn btn-neon">Book Slot Now</a>
+        </div>
+    </header>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-grid">
+                <div class="about-card glass">
+                    <h3>The Club</h3>
+                    <p>PaddlePro delivers elite indoor and outdoor courts optimized with smart LED lighting configurations and premium dynamic turf surfaces.</p>
+                </div>
+                <div class="about-card glass">
+                    <h3>Rules & Timings</h3>
+                    <p>Open Daily: 06:00 AM - 12:00 AM. Non-marking sports shoes required. Gear rental setups accessible on-premise.</p>
+                </div>
+                <div class="about-card glass manager-card">
+                    <h3>Management</h3>
+                    <p class="manager-name"></p>
+                    <span class="badge">Paddle Ground Manager</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="courts" class="courts">
+        <div class="container">
+            <h2 class="section-title">Elite Courts</h2>
+            <div class="courts-grid">
+                <div class="court-card glass animate-card">
+                    <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=600" alt="Center Court">
+                    <div class="court-info">
+                        <h3>Neon Center Court</h3>
+                        <p class="court-type">Indoor Panoramic</p>
+                        <div class="court-meta">
+                            <span class="price">PKR 2,500/hr</span>
+                            <span class="status-badge live">Available</span>
+                        </div>
+                        <a href="#booking" class="btn btn-outline" onclick="selectCourt(1, 2500)">Book Court</a>
+                    </div>
+                </div>
+                <div class="court-card glass animate-card">
+                    <img src="https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?q=80&w=600" alt="Cyber Court">
+                    <div class="court-info">
+                        <h3>Cyber Arena 2</h3>
+                        <p class="court-type">Outdoor Pro Layout</p>
+                        <div class="court-meta">
+                            <span class="price">PKR 1,800/hr</span>
+                            <span class="status-badge live">Available</span>
+                        </div>
+                        <a href="#booking" class="btn btn-outline" onclick="selectCourt(2, 1800)">Book Court</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking" class="booking">
+        <div class="container">
+            <h2 class="section-title">Secure Your Slot</h2>
+            <div class="booking-wrapper glass">
+                <form id="bookingForm" oninput="calculateTotal()">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Selected Arena</label>
+                            <select id="bookingCourt" required>
+                                <option value="1" data-price="2500">Neon Center Court (PKR 2500/hr)</option>
+                                <option value="2" data-price="1800">Cyber Arena 2 (PKR 1800/hr)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Target Date</label>
+                            <input type="date" id="bookingDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Time Slots (Select multiple)</label>
+                            <select id="bookingTime" multiple required size="4">
+                                <option>05:00 PM - 06:00 PM</option>
+                                <option>07:00 PM - 08:00 PM</option>
+                                <option>08:00 PM - 09:00 PM</option>
+                                <option>09:00 PM - 10:00 PM</option>
+                            </select>
+                            <small>Hold Ctrl / Cmd to select more than one slot</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Squad Players</label>
+                            <input type="number" id="bookingPlayers" min="2" max="4" value="4" required>
+                        </div>
+                    </div>
+
+                    <div class="booking-summary">
+                        <h3>Order Summary</h3>
+                        <p>Base Fee Rate: <span id="summaryRate">PKR 2500</span></p>
+                        <p class="total-highlight">Aggregate Total: <span id="summaryTotal">PKR 2500</span></p>
+                    </div>
+
+                    <div class="payment-methods">
+                        <h4>Select Gateway Method</h4>
+                        <div class="gateway-options">
+                            <label class="gateway-box">
+                                <input type="radio" name="paymentMethod" value="Card" checked onclick="toggleGatewayFields('card')">
+                                <span><i class="fas fa-credit-card"></i> Card</span>
+                            </label>
+                            <label class="gateway-box">
+                                <input type="radio" name="paymentMethod" value="JazzCash" onclick="toggleGatewayFields('mobile')">
+                                <span>JazzCash</span>
+                            </label>
+                            <label class="gateway-box">
+                                <input type="radio" name="paymentMethod" value="EasyPaisa" onclick="toggleGatewayFields('mobile')">
+                                <span>EasyPaisa</span>
+                            </label>
+                        </div>
+
+                        <div id="cardFields" class="payment-input-group">
+                            <input type="text" placeholder="16-Digit Card Number" maxlength="16" class="form-control">
+                            <div class="input-row">
+                                <input type="text" placeholder="MM/YY" class="form-control">
+                                <input type="password" placeholder="CVV" maxlength="3" class="form-control">
+                            </div>
+                        </div>
+
+                        <div id="mobileFields" class="payment-input-group hidden">
+                            <input type="text" placeholder="03xx-xxxxxxx Account Number" class="form-control">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-neon btn-block">Authorize & Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboards" class="dashboards-section">
+        <div class="container">
+            <div class="dashboard-toggle-tabs">
+                <button class="tab-btn active" onclick="switchDashboard('userDash')">User Space</button>
+                <button class="tab-btn" onclick="switchDashboard('adminDash')">System Management Area</button>
+            </div>
+
+            <div id="userDash" class="dashboard-view glass">
+                <div class="dash-header">
+                    <h2>Welcome back, Player</h2>
+                    <span class="user-email-display">client@paddlepro.com</span>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dash-card">
+                        <h3>Active Schedules Matrix</h3>
+                        <div class="table-responsive">
+                            <table>
+                               <thead>
+                                   <tr><th>ID</th><th>Court</th><th>Schedule Timeline</th><th>Aggregate Total</th><th>Status</th><th>Actions</th></tr>
+                               </thead>
+                               <tbody id="userBookingsTable">
+                                   <tr>
+                                       <td>#1024</td>
+                                       <td>Neon Center Court</td>
+                                       <td>2026-05-24 @ 08:00 PM</td>
+                                       <td>PKR 2,500</td>
+                                       <td><span class="badge badge-success">Confirmed</span></td>
+                                       <td>
+                                           <button class="btn-action cancel" onclick="cancelBookingAction(1024)">Cancel</button>
+                                           <button class="btn-action download" onclick="triggerReceiptDownload(1024)"><i class="fas fa-download"></i></button>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="adminDash" class="dashboard-view glass hidden">
+                <h2>Infrastructure Control Matrix</h2>
+                <div class="admin-grid">
+                    <div class="dash-card counter-card">
+                        <h4>Total Reservations</h4>
+                        <p class="counter-num" id="adminTotalBookings">154</p>
+                    </div>
+                    <div class="dash-card counter-card">
+                        <h4>Processed Yield</h4>
+                        <p class="counter-num" id="adminTotalRevenue">PKR 385,000</p>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <h3>Global Reservation Ledger</h3>
+                    <div class="table-responsive">
+                        <table>
+                           <thead>
+                               <tr><th>ID</th><th>User</th><th>Target Arena</th><th>Date Slot</th><th>Total Price</th><th>Status</th></tr>
+                           </thead>
+                           <tbody id="adminBookingsTable">
+                               <tr><td>#1024</td><td>Salman</td><td>Neon Center Court</td><td>2026-05-24</td><td>PKR 2,500</td><td>Confirmed</td></tr>
+                           </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Connect with Us</h2>
+            <div class="contact-grid">
+                <form class="contact-form glass" onsubmit="event.preventDefault(); alert('Message dispatched safely.');">
+                    <input type="text" placeholder="Name" required class="form-control">
+                    <input type="email" placeholder="Email Address" required class="form-control">
+                    <textarea placeholder="Your Message Content Here..." rows="5" required class="form-control"></textarea>
+                    <button type="submit" class="btn btn-neon">Send Message</button>
+                </form>
+                <div class="contact-info glass">
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>support@paddlepro.com</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <p>+92 3126100130</p>
+                    </div>
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3368.123456!2d74.531234!3d32.501234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391eea242e!2sSialkot!5e0!3m2!1sen!2spk!4v1700000000000!5m2!1sen!2spk" width="100%" height="200" style="border:0; border-radius: 8px; filter: grayscale(1) invert(1);" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <div class="socials">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>© 2026 PaddlePro Systems. All Rights Reserved FOR ABDULLAH SIDDIQUI.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="authModal" class="modal-overlay hidden">
+        <div class="modal-box glass">
+            <div class="modal-close" onclick="closeAuthModal()">×</div>
+            
+            <div id="loginFormBlock">
+                <h3>System Authorization</h3>
+                <form id="loginForm">
+                    <input type="email" id="loginEmail" placeholder="Security Email" required class="form-control">
+                    <input type="password" id="loginPassword" placeholder="Access Password" required class="form-control">
+                    <button type="submit" class="btn btn-neon btn-block">Login</button>
+                </form>
+                <p class="switch-auth-prompt">New to the arena? <a href="#" onclick="toggleAuthForm('register')">Register Profile</a></p>
+            </div>
+
+            <div id="registerFormBlock" class="hidden">
+                <h3>Create Account Profile</h3>
+                <form id="registerForm">
+                    <input type="text" id="regName" placeholder="Full Name" required class="form-control">
+                    <input type="email" id="regEmail" placeholder="Email Address" required class="form-control">
+                    <input type="password" id="regPassword" placeholder="Access Password" required class="form-control">
+                    <button type="submit" class="btn btn-neon btn-block">Register Account</button>
+                </form>
+                <p class="switch-auth-prompt">Have credentials? <a href="#" onclick="toggleAuthForm('login')">Login Now</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
