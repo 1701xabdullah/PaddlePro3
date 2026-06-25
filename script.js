@@ -104,10 +104,17 @@ async function handleLogin(e) {
 
     currentUser = user;
     closeAuthModal();
-    alert(`Welcome back, ${user.name}!`);
 
-    // Show dashboard section
-    document.getElementById('dashboardSection').classList.remove('hidden');
+    // BUG 1 FIXED: correct section ID is 'dashboards'
+    document.getElementById('dashboards').classList.remove('hidden');
+
+    // Update welcome name and email in dashboard header
+    const nameEl  = document.getElementById('dashUserName');
+    const emailEl = document.getElementById('dashUserEmail');
+    if (nameEl)  nameEl.innerText  = user.name;
+    if (emailEl) emailEl.innerText = user.email;
+
+    alert(`Welcome back, ${user.name}!`);
 
     if (user.role === 'admin') {
         loadAdminDashboard();
@@ -121,7 +128,8 @@ async function handleLogin(e) {
 // ============================================================
 function handleLogout() {
     currentUser = null;
-    document.getElementById('dashboardSection').classList.add('hidden');
+    // BUG 1 FIXED: correct section ID is 'dashboards'
+    document.getElementById('dashboards').classList.add('hidden');
     alert('You have been logged out.');
 }
 
@@ -172,12 +180,12 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     const court_id       = parseInt(courtSelect.value);
     const rate           = parseFloat(selectedOption.getAttribute('data-price')) || 0;
 
-    const booking_date    = document.getElementById('bookingDate').value;
-    const time_slot       = document.getElementById('bookingTime').value;
-    const duration        = parseInt(document.getElementById('bookingDuration')?.value) || 1;
-    const players         = parseInt(document.getElementById('bookingPlayers')?.value) || 1;
-    const total_price     = rate * duration;
-    const payment_method  = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'Card';
+    const booking_date   = document.getElementById('bookingDate').value;
+    const time_slot      = document.getElementById('bookingTime').value;
+    const duration       = parseInt(document.getElementById('bookingPlayers')?.value) || 1;
+    const players        = parseInt(document.getElementById('bookingPlayers')?.value) || 1;
+    const total_price    = rate * Math.max(document.getElementById('bookingTime').selectedOptions.length, 1);
+    const payment_method = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'Card';
 
     if (!booking_date || !time_slot || !court_id) {
         alert('Please fill in all booking details.');
@@ -231,7 +239,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     alert(`Booking confirmed! ✅\nBooking ID: #${booking.id}\nTransaction ID: ${mockTxnId}`);
     this.reset();
     calculateTotal();
-    loadUserDashboard(); // refresh user bookings
+    loadUserDashboard();
 });
 
 // ============================================================
@@ -270,7 +278,7 @@ async function loadUserDashboard() {
     tbody.innerHTML = '';
 
     if (!bookings || bookings.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">No bookings yet.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">No bookings yet.</td></tr>';
         return;
     }
 
@@ -281,10 +289,10 @@ async function loadUserDashboard() {
                 <td>${b.courts?.name || 'N/A'}</td>
                 <td>${b.booking_date} — ${b.time_slot}</td>
                 <td>PKR ${parseFloat(b.total_price).toLocaleString()}</td>
+                <td><span class="badge-success">${b.status}</span></td>
                 <td>
-                    <span class="badge-success">${b.status}</span>
                     <button class="btn-action cancel" onclick="cancelBooking(${b.id})">Cancel</button>
-                    <button class="btn-action download" onclick="triggerReceiptDownload(${b.id})">Receipt</button>
+                    <button class="btn-action download" onclick="triggerReceiptDownload(${b.id})"><i class="fas fa-download"></i></button>
                 </td>
             </tr>`;
     });
@@ -314,9 +322,9 @@ async function loadAdminDashboard() {
         return;
     }
 
-    // Update counters if elements exist
-    const totalEl    = document.getElementById('totalBookings');
-    const revenueEl  = document.getElementById('totalRevenue');
+    // BUG 2 FIXED: correct IDs match index.html
+    const totalEl   = document.getElementById('adminTotalBookings');
+    const revenueEl = document.getElementById('adminTotalRevenue');
     if (totalEl)   totalEl.innerText   = bookings.length;
     if (revenueEl) revenueEl.innerText = 'PKR ' + bookings.reduce((s, b) => s + parseFloat(b.total_price), 0).toLocaleString();
 
@@ -354,7 +362,7 @@ async function cancelBooking(id) {
 }
 
 // ============================================================
-//  RECEIPT (mock download)
+//  RECEIPT (mock)
 // ============================================================
 function triggerReceiptDownload(id) {
     alert(`Downloading receipt for Booking #${id}`);
@@ -373,7 +381,7 @@ window.addEventListener('DOMContentLoaded', () => {
         dateInput.min   = today;
     }
 
-    // Wire up auth forms if they exist
+    // Wire up auth forms
     const registerForm = document.getElementById('registerForm');
     const loginForm    = document.getElementById('loginForm');
     if (registerForm) registerForm.addEventListener('submit', handleRegister);
